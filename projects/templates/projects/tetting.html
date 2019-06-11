@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="{% url 'projects:add' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+       title : <input type="text" name="title"><br>
+        content : <input type="text" name="details"><br>
+        <select name="categorie">
+            <option value="1">test</option>
+        </select><br>
+        <input type="hidden" name="user" value="1">
+        content : <input type="text" name="totalTarget"><br>
+        content : <input type="date" name="startCampaign"><br>
+        content : <input type="date" name="endcampaign"><br>
+        content : <input type="file"  multiple name="image"><br>
+        <input type="submit" value="submit">
+    </form>
+</body>
+</html>

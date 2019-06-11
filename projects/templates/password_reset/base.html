@@ -1,0 +1,20 @@
+{% extends "layout/layout1.html" %}
+
+{% block nav %}
+{% include "layout/Navbar.html" %}
+<div style="height:80px;"></div>
+{% endblock %}
+
+<div class="container">
+    {% block content %}
+      <h1>Forgot your password?</h1>
+      <p>Enter your email address below, and we'll email instructions for setting a new one.</p>
+
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="mr-5 " value="Send me instructions!">
+      </form>
+    </div>
+    {% endblock %}
+</div>

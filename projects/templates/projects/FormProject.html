@@ -1,0 +1,161 @@
+{{% extends "layout/layout1.html" %}
+{% load static %}
+{% load tag_library %}
+
+{% block content %}
+
+<!--include nav bar-->
+
+{% include "layout/Navbar.html" %}
+<!--start first section-->
+
+<div style="height:70px;"></div>
+<!--for error -->
+
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="container">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>Error !</strong> {{message}}.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+        </div>
+        {% endif %}
+        {% if message.tags == 'success' %}
+
+         <div class="container">
+             <div class="alert alert-primary alert-dismissible fade show" role="alert">
+              <strong>Sucess !</strong> {{message}}.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+         </div>
+        {% endif %}
+    {% endfor %}
+
+{% if form.errors %}
+       {% for i in form.errors.items %}
+            {% for j in  i %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>{{j}}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endfor %}
+        {% endfor %}
+{% endif %}
+
+<div class="container">
+    <h2 class="h1 text-center text-muted">Add New Projects</h2>
+    <form class="mt-5" action="{% url 'projects:new' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row mt-3">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="text-success h3">Title</label>
+                 <input type="text" required value="{{data.title}}" name="title" class="form-control form-control-lg"  placeholder="Project Title">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                    <label class="text-primary h3" >Project Categories</label>
+                      <select class="form-control form-control-lg" name="categorie" >
+                          {% for i in categories%}
+                           <option value="{{i.id}}">{{i.name}}</option>
+                          {% endfor %}
+
+                      </select>
+              </div>
+            </div>
+         </div>
+         <div class="form-group mt-3">
+            <label class="text-danger h3" >Details</label>
+            <textarea class="form-control" required name="details" rows="3">{{data.details}}</textarea>
+          </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="text-success h3">Total Target</label>
+                 <input type="text" required value="{{data.totalTarget}}" name="totalTarget" class="form-control form-control-lg" placeholder="Total Target" >
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                    <label class="text-primary h3" >Tags</label>
+                      <input type="text" value="{{data.tags}}" name="tags" class="form-control form-control-lg"  placeholder="write tage as tag1,tag2 ... ">
+              </div>
+            </div>
+         </div>
+         <div class="row mt-3">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="text-success h3">Start Campaign</label>
+                 <input type="date" required value="{{data.startCampaign}}" name="startCampaign" class="form-control form-control-lg"  placeholder="write tage as tag1,tag2 ... ">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                    <label class="text-primary h3" >End Campaign</label>
+                      <input type="date" required value="{{data.endcampaign}}" name="endcampaign" class="form-control form-control-lg"  placeholder="Project Title">
+              </div>
+            </div>
+         </div>
+        <input type="hidden" name="user" value="{{user.id}}">
+        <div class="custom-file mb-4">
+          <input type="file"  id="images" name="image" onchange="checkFile()" multiple class="custom-file-input form-control-lg"  accept="image/gif, image/jpeg, image/png">
+          <label class="custom-file-label" data-browse="Bestand kiezen">Project Image</label>
+        </div>
+      <div class="d-flex justify-content-center mb-3">
+          <button type="submit" class="btn btn-primary btn-lg btn-block ">Add</button>
+      </div>
+
+    </form>
+</div>
+<!--valid-->
+<script>
+        function checkFile() {
+        var x =  document.getElementById("images");
+        var txt = "";
+        document.getElementById("demo").innerHTML = txt;
+        if ('files' in x) {
+        if (x.files.length == 0) {
+        txt = "Select one or more files.";
+        } else {
+        for (var i = 0; i < x.files.length; i++) {
+
+        var file = x.files[i];
+        if ('name' in file) {
+
+        var ext = file.name.split('.').pop().toLowerCase();
+        if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1){
+        txt += "name: " + file.name + "<br>";
+        document.getElementById("images").value = "";
+
+        if ('size' in file) {
+        txt += "size: " + file.size + " bytes <br>";
+        }
+        alert('You are trying to upload files which not allowed ' + "(" + file.name + " is invalid)");
+
+        }
+
+        }
+        }
+        }
+        }
+        else {
+        if (x.value == "") {
+        txt += "Select one or more files.";
+        } else {
+        txt += "The files property is not supported by your browser!";
+        txt  += "<br>The path of the selected file: " + x.value;
+        }
+        }
+        }
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "layout/layout1.html" %}
+{% load static %}
+{% load tag_library %}
+
+{% block content %}
+
+<!--include nav bar-->
+
+{% include "layout/Navbar.html" %}
+
+<div style="height:65px;"></div>
+<!--for error -->
+
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="container">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Error !</strong> {{message}}.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+{% endif %}
+{% if message.tags == 'success' %}
+
+<div class="container">
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong>Sucess !</strong> {{message}}.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+
+
+<div class="container">
+    <h3 class="h2 text-muted text-center mb-5"> Register -- Join Us -- </h3>
+	<div class="row">
+		<div class="col-md-6">
+				<img src="{% static 'users/images/images2.jpeg' %}" height="570" class="w-100">
+		</div>
+		<div class="col-md-6">
+
+			<form class="mb-4" action="{% url 'users:register'  %}" method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="form-group">
+					<label >User Name</label>
+					<input type="text" placeholder="Username" name="username" class="form-control" value="{{data.username}}">
+				</div>
+                <div class="form-row">
+					<div class="col-md">
+					  <input type="text" placeholder="First Name" class="form-control" name="first_name" value="{{data.first_name}}">
+					</div>
+					<div class="col-md">
+					  <input type="text" placeholder="Last Name" class="form-control" name="last_name" value="{{data.last_name}}">
+					</div>
+                </div>
+				<div class="form-group mt-2">
+					<label >User Email</label>
+					<input type="email" name="email" placeholder="Email Address" class="form-control" value="{{data.email}}">
+				</div>
+				<div class="form-group">
+					<label >Password</label>
+					<input type="password" placeholder=" Enter password" class="form-control" name="password1" >
+				</div>
+				<div class="form-group">
+					<label >Confirm Password</label>
+					<input type="password" placeholder=" Confirm password" class="form-control" name="password2" >
+				</div>
+                <div class="form-group">
+					<label >Phone</label>
+					<input type="text" placeholder="phonenumber" class="form-control" name="phone" value="{{data.phone}}">
+				</div>
+				<div class="custom-file">
+					<input type="file" class="custom-file-input" id="validatedCustomFile" name="image">
+					<label class="custom-file-label" for="validatedCustomFile">Choose Image</label>
+			  </div>
+				<button class="btn btn-primary btn-lg mt-2 btn-block" type="submit">Add</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!--end-->
+
+{% endblock %}
+
+<!--file javascript-->

@@ -1,0 +1,311 @@
+{% extends "layout/layout1.html" %}
+{% load static %}
+{% load tag_library %}
+
+{% block content %}
+
+<!--include nav bar-->
+
+{% include "layout/Navbar.html" %}
+
+<div style="height:65px;"></div>
+<!--for error -->
+
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="container">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Error !</strong> {{message}}.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+{% endif %}
+{% if message.tags == 'success' %}
+
+<div class="container">
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong>Sucess !</strong> {{message}}.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+<div class="container">
+    {% if flag %}
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove" data-whatever="@mdo">Delete Account </button>
+    {% endif %}
+    <div class="border p-2 shadow-lg p-3 mb-5 bg-white rounded">
+      <div class="">
+          <!--info-->
+          <div class="row">
+              <div class="col-md-4 pt-5">
+                  {% if userprofile.profile.image %}
+                  <img src="{{ userprofile.profile.image.url }}" width="300" height="300" class="rounded-circle">
+                  {% else %}
+                        <img src="{% static 'projects/image/001.jpg' %}" width="300" height="300" class="rounded-circle">
+                    {% endif %}
+                  {% if flag %}
+                  <div class="text-center">
+                      <a class="" href="{% url 'users:edit' user.id %}">edit info</a>
+                  </div>
+                  {% endif %}
+              </div>
+              <div class="col-md-8">
+                  <ul class="list-unstyled">
+                      <li class="py-3 pl-2 border-bottom bg-light">
+
+                          <span class="text-primary h3 mr-3"> <i class="fas fa-user "></i> User Name  :</span>
+                          <span class="h4 text-muted">{{userprofile.username}}</span>
+                      </li>
+                      <li class="py-3 pl-2 border-bottom bg-light">
+
+                          <span class="text-dark h3 mr-3"> <i class="fas fa-user "></i>  Name  :</span>
+                          <span class="h4 text-muted">{{userprofile.first_name}} {{userprofile.last_name}} </span>
+                      </li>
+                      <li class="py-3 pl-2 border-bottom bg-light">
+                          <span class="text-success h3 mr-3"> <i class="fas fa-envelope"></i> Email :</span>
+                          <span class="h4 text-muted">{{userprofile.email }}</span>
+                      </li>
+                      <li class="py-3 pl-2 border-bottom bg-light">
+                          <span class="text-info h3 mr-3"> <i class="fab fa-facebook-square"></i> FaceBook :</span>
+                          <span class="h4 text-muted">{{userprofile.profile.facebook|default_if_none:'-------'}}</span>
+                      </li>
+                      <li class="py-3 pl-2 border-bottom bg-light">
+                           <span class="text-warning h3 mr-3"> <i class="fas fa-city"></i> country :</span>
+                           <span class="h4 text-muted">{{userprofile.profile.country|default_if_none:'-------'}}</span>
+                      </li>
+                      <li class="py-3 pl-2 border-bottom bg-light">
+                          <span class="text-danger h3 mr-3"> <i class="fas fa-birthday-cake"></i> Birth Date :</span>
+                           <span class="h4 text-muted">{{userprofile.profile.birth_date|default_if_none:'-------'}}</span>
+                      </li>
+
+                      <li class="py-3 pl-2 border-bottom bg-light">
+                          <span class="text-secondary h3 mr-3"> <i class="fas fa-phone"></i> Phone :</span>
+                           <span class="h4 text-muted">{{userprofile.profile.phone|default_if_none:'-------'}}</span>
+                      </li>
+
+                  </ul>
+              </div>
+          </div>
+      </div>
+        <!--projects-->
+        <hr class="my-5 d-block">
+        <!-- start donations -->
+        <h2 class="h1 mb-4 text-center text-muted"> His Donations <span class="badge badge-pill badge-success">{{scount}}</span> </h2>
+        <div class="row">
+            {% for project in suppliers %}
+            <div class="col-md-4">
+                <div class="card w-100 shadow mb-5 bg-white rounded " style="min-height:400px;max-height:400px;"  >
+                {% if project.project.first_Projectphoto  %}
+                <img src="{{project.project.first_Projectphoto.image.url}}" class="card-img-top w-100" height="100" alt="...">
+                {% else %}
+                <img src="{% static 'projects/image/001.jpg' %}" class="card-img-top w-100" height="100" alt="...">
+                {% endif %}
+
+                <div class="card-body pt-2 pb-0">
+                    <h5 class="card-title h4 text-info">{{project.project.title}}</h5>
+                    <h5 class="card-title text-secondary">Created By: <sapn class="badge badge-success">{{project.project.user.username}}</sapn></h5>
+                    <p class="card-text"  style="min-height:50px;max-height:50px;" >
+                        {{project.project.details|truncatechars:50}}
+                        <button class="badge badge-light btn" data-toggle="modal" data-target="#model{{forloop.counter}}">Read more</button>
+                        <!-- Modal -->
+                    <div class="modal fade" id="model{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="model{{forloop.counter}}Title" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="model{{forloop.counter}}Title">{{project.project.title}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    {{project.project.details}}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'projects:detail' project.project.id %}" class="card-link">Details</a>
+                </div>
+                <div class="more-info">
+
+                    <h3 class="text-center">
+                        <span class="badge badge-success w-100 "><i class="fas fa-money-bill-alt"></i> {{project.quanty}} $</span>
+                    </h3>
+                </div>
+                <div class="card-footer text-muted">
+                    {{project.project.get_date}}
+                </div>
+            </div>
+            </div>
+                {%endfor%}
+        </div>
+        <!--end-->
+        <hr class="my-5 d-block">
+      <div class="">
+          <!--start loop-->
+          <h2 class="h1 mb-4 text-center text-muted"> His Projects <span class="badge badge-pill badge-success">{{pcount}}</span> </h2>
+          <div class="row">
+               {% for project in userProject %}
+                 <div class="col-md-4 mb-3">
+                <div class="card w-100 shadow  mb-5 bg-white rounded " style="min-height:600px;max-height:600px;"  >
+                    {% if project.first_Projectphoto  %}
+                    <img src="{{project.first_Projectphoto.image.url}}" class="card-img-top w-100" height="200" alt="...">
+                    {% else %}
+                        <img src="{% static 'projects/image/001.jpg' %}" class="card-img-top w-100" height="200" alt="...">
+                    {% endif %}
+
+                   <div class="card-body pt-2 pb-0">
+                    <h5 class="card-title h4 text-info">{{project.title}}</h5>
+                    <h5 class="card-title text-secondary">Created By: <sapn class="badge badge-success">{{project.user.username}}</sapn></h5>
+                    <p class="card-text" style="min-height:100px;max-height:100px;" >
+                        {{project.details|truncatechars:200}}
+                         <button class="badge badge-light btn" data-toggle="modal" data-target="#model3{{forloop.counter}}">Read more</button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="model3{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="model3{{forloop.counter}}Title" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="model2{{forloop.counter}}Title">{{project.title}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                {{project.details}}
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </p>
+                  </div>
+                 <div class="card-body pb-0">
+                    <a href="{% url 'projects:detail' project.id %}" class="card-link">Details</a>
+                     <!--testing-->
+                     {% if project.checkTarget %}
+                     {% if flag %}
+                         <a href="{% url 'projects:deleteProject' project.id %}" class="btn btn-danger">Delete</a>
+                     {% else %}
+                      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#dnonate{{forloop.counter}}" data-whatever="@mdo">Donate</button>
+                    {% endif %}
+                     {% else %}
+                      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#dnonate{{forloop.counter}}" data-whatever="@mdo">Donate</button>
+                     {% endif %}
+                     <!--end-->
+                     <!--model-->
+                     <div class="modal fade" id="dnonate{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="dnonate{{forloop.counter}}Label" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="dnonate{{forloop.counter}}Label">New Donate To {{project.title}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="{% url 'projects:donate' project.id %}" method="post" id="donta">
+                                {% csrf_token %}
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Recipient To :</label>
+                                <input type="text" class="form-control" disabled id="recipient-name" value="{{project.user.username}}">
+                              </div>
+                              <div class="form-group">
+                                <label  class="col-form-label">Qunaty oF Many</label>
+                                <input type="number"  class="form-control"  required name="quanty"  placeholder="Enter qunaty of mony">
+                              </div>
+                                <input type="submit" class="btn btn-primary"  value="Donate"  >
+                            </form>
+                          </div>
+                             <div class="modal-footer">
+                            <button type="button"  class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                     </div>
+                    <div class="more-info">
+                        <div class="row no-gutters ">
+                            <div class="col-md-6 border p-1 ">
+                                <i class="fas fa-star mr-3"></i>
+                                <span class="badge badge-warning">{{project.rating.rate__avg|default_if_none:0|to_int}}</span>
+                            </div>
+                            <div class="col-md-6 border p-1 ">
+                                <i class="fas fa-users mr-3"></i>
+                                <span class="badge badge-success">{{project.supplierCount|default_if_none:0|to_int}}</span>
+                            </div>
+                            <div class="col-md-6 border p-1 ">
+                                <i class="fas fa-money-check-alt fa-1x mr-3"></i>
+                                <span class="badge badge-success mr-3">{{project.SupllierMoney.quanty__sum|default_if_none:0|to_int}} $</span>
+                            </div>
+                             <div class="col-md-6 border p-1  ">
+                                <i class="fas fa-business-time mr-3"></i>
+                                <span class="badge badge-success">{{project.SupllierMoney.quanty__sum|default_if_none:0|to_int|sub:project.totalTarget}} $</span>
+                            </div>
+
+                        </div>
+                    </div>
+                  <div class="card-footer text-muted">
+                        {{project.get_date}}
+                  </div>
+                </div>
+            </div>
+                 {% endfor %}
+          </div>
+
+
+      </div>
+
+    </div>
+</div>
+
+<!--model donate-->
+ <div class="modal fade" id="remove" tabindex="-1" role="dialog" aria-labelledby="removeLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="removeLabel">Are you sure --({{userprofile.username}})-- </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'users:delete' %}" method="post" >
+            {% csrf_token %}
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Password :</label>
+            <input type="password" class="form-control"  name="password" value=""  placeholder="enter password">
+          </div>
+            <input type="submit" class="btn btn-primary"  value="Delete"  >
+        </form>
+      </div>
+         <div class="modal-footer">
+        <button type="button"  class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+ </div>
+<!--end-->
+
+{% endblock %}
+
+<!--file javascript-->
+{% block js %}
+<script src="{% static 'projects/js/jquery.bxslider.js'%}"></script>
+<script src="{% static 'projects/js/project.js'%}"></script>
+{% endblock %}

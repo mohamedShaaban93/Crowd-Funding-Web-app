@@ -1,0 +1,73 @@
+{% extends "layout/layout1.html" %}
+{% load static %}
+{% load tag_library %}
+
+{% block content %}
+
+<!--include nav bar-->
+
+{% include "layout/Navbar.html" %}
+
+<div style="height:65px;"></div>
+<!--for error -->
+
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="container">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Error !</strong> {{message}}.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+{% endif %}
+{% if message.tags == 'success' %}
+
+<div class="container ">
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong>Sucess !</strong> {{message}}.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+
+<div class="container mt-5">
+    <h2 class=" h1 bg-info py-4 y text-center text-light mb-4">Login In Our Crowd-Funding </h2>
+    <div class="row">
+        <div class="col-md-5">
+            <img src="{% static 'users/images/images.jpeg' %}" class="w-100">
+        </div>
+        <div class="col-md-7">
+            <form class="mb-3" action="{% url 'users:login2' %}" method="post">
+                {% csrf_token %}
+              <div class="form-group">
+                <label for="exampleInputEmail1">User Name</label>
+                <input type="text" value="{{data.username}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter User Name" name="username">
+
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+              </div>
+                <div class="form-group">
+                   <a href="{% url 'users:register' %}">Register Now</a> , <a href="{% url 'password_reset_recover' %}">Forget Password</a>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block btn-lg">Login</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+<!--file javascript-->
+{% block js %}
+<script src="{% static 'projects/js/jquery.bxslider.js'%}"></script>
+<script src="{% static 'projects/js/project.js'%}"></script>
+{% endblock %}
